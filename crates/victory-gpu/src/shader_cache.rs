@@ -143,7 +143,12 @@ fn build() -> [u8; 32] {
     });
     let mut hash = blake3::Hasher::new();
     hash.update(fixed);
-    for value in victory_shader::emit::host_settings() {
+    let settings = victory_shader::emit::host_settings();
+    let [max_wave, ..] = settings;
+    if max_wave == 32 {
+        hash.update(b"wave32 divergent-loop scalars");
+    }
+    for value in settings {
         hash.update(&value.to_le_bytes());
     }
     *hash.finalize().as_bytes()
