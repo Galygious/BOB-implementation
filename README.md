@@ -31,7 +31,7 @@ The 44.9 ms RX 7900 XTX result below comes from the inherited [AvatarManz benchm
 
 | Adapter | Diagnostics build | Shader tests | GPU library tests | Retail rendering | Playable progression |
 | --- | --- | --- | --- | --- | --- |
-| NVIDIA GeForce RTX 5070, desktop, driver 610.88 | Pass | Full library 316 passed, 4 ignored. Hardware reported 32–32 lanes. | 445 passed, 34 ignored | Pending separate run | Pending separate run |
+| NVIDIA GeForce RTX 5070, desktop, driver 610.88 | Pass | Full library 316 passed, 4 ignored. Hardware reported 32–32 lanes. | 445 passed, 34 ignored | Loaded the prison checkpoint. Faces were missing and some surfaces showed block artifacts. | Verified character movement and camera control in the first prison cell. |
 | NVIDIA GeForce RTX 3070, driver 610.88 | Same binary | Wave64 suite 33 passed, including the branch-mask readback. | Pending | Pending separate run | Pending separate run |
 | AMD Radeon(TM) Graphics, integrated, driver 32.0.11024.2 | Same binary | Full library 316 passed, 4 ignored with capability skips. Hardware reported 32–64 lanes. | 445 passed, 34 ignored | Pending separate run | Pending separate run |
 | Radeon RX 9070 XT / RX 7900 XTX | Same binary | Pending hardware access | Pending hardware access | Pending hardware access | Pending hardware access |
@@ -47,6 +47,12 @@ cargo test --locked -p victory-shader --lib -- --test-threads=1 --nocapture
 cargo test --locked -p victory-gpu --lib --features diagnostics -- --test-threads=1 --nocapture
 cargo xtask policy
 ```
+
+### Matched retail check on the desktop RTX 5070
+
+On 2026-11-26, BOB `cf64d17555f6057a54294635772b9782594e4068` and pinned Belobug `4eb6cfdf9e61cb112f1f811344ec0dd309eddd6c` loaded retail version 1.0.2.1 from identical copies of the prison checkpoint and settings. Both used the Series X diagnostics launcher with light DRED, ambient `0.8`, ray tracing off and separate empty shader caches. Both runtime logs identified the NVIDIA GeForce RTX 5070 (`10de:2f04`).
+
+Pinned Belobug showed the same missing faces and reached the movement tutorial. Input response on pinned Belobug remains unverified. The prison window view ran at roughly 1–2 fps on both builds. BOB progression beyond the first prison cell remains unverified.
 
 ## Donor review
 
@@ -64,7 +70,7 @@ cargo xtask policy
 
 - Heap-relative bindless reads can still reach slots beyond the title descriptors that fit in place. Safe remapping or typed guards across this branch’s bindings and shader ABI need a separate port. [Descriptor discussion](https://github.com/Marvisak/VIctory/issues/747)
 - The synchronized loop fix covers eligible single-wave compute groups on Wave32 hosts. General divergent control flow and the native Wave64 branch-mask refusal reproduced on the Radeon iGPU remain open. [Loop limitations](https://github.com/Belobug/VIctory-Belobug-AMD/pull/366), [branch-mask donor](https://github.com/Belobug/VIctory-Belobug-AMD/pull/345)
-- Mesh outputs that exceed D3D12’s 32 KiB budget still need a compatible mesh/pixel link path. The source report observed garbled characters on an RTX 5070 Laptop. Desktop retail behavior remains to be checked. [Belobug issue #125](https://github.com/Belobug/VIctory-Belobug-AMD/issues/125)
+- Mesh outputs that exceed D3D12’s 32 KiB budget still need a compatible mesh/pixel link path. The source report observed garbled characters on an RTX 5070 Laptop. [Belobug issue #125](https://github.com/Belobug/VIctory-Belobug-AMD/issues/125)
 
 ## Upstream documentation
 
