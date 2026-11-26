@@ -249,7 +249,9 @@ fn submit_split(this: This, lists: &[This]) {
         // same reason: the lists are not detached here, so nothing else
         // gives their fresh tables' dynamic slots back before the title
         // resets them).
-        crate::list::tables_done(&lists[..cut]);
+        if victory_shader::emit::view_heap_limit() == crate::descriptor::host::PORTABLE_VIEWS - 1 {
+            crate::list::tables_done(&lists[..cut]);
+        }
     }
     if cut < lists.len() {
         static SEEN: AtomicU64 = AtomicU64::new(0);

@@ -1519,7 +1519,7 @@ pub(crate) fn near_heaps(va: u64) -> String {
 
 /// The host's limit for shader-visible view heaps on resource binding
 /// tiers 1 and 2; tier 3 hardware may take more.
-const PORTABLE_VIEWS: u32 = 1_000_000;
+pub(crate) const PORTABLE_VIEWS: u32 = 1_000_000;
 
 /// The size of every host view heap on a host that takes more than
 /// [`PORTABLE_VIEWS`] (AMD): the title's heap (a little over 1,000,000
