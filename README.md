@@ -1,3 +1,40 @@
+# BOB Implementation
+
+BOB Implementation (Best of Both Worlds) assembles compatibility work already published by the VIctory community and related projects. Credit for each fix belongs to its original authors. BOB’s own changes are limited to the small amount of glue needed to combine that work.
+
+BOB starts from Belobug’s Radeon build and assembles existing D3D12 compatibility patches for GeForce, with the desktop RTX 5070 as the test target. The fork carries compatibility-layer source under GPL-3.0-or-later. See [LICENSE](LICENSE).
+
+## Radeon baseline
+
+| Belobug branch at intake | Exact revision | Basis for selection |
+| --- | --- | --- |
+| `a-publier` (default, selected) | [`4eb6cfd`](https://github.com/Belobug/VIctory-Belobug-AMD/commit/4eb6cfdf9e61cb112f1f811344ec0dd309eddd6c) | Contains the RX 9070 XT port and the RDNA4 shader compiler fix from Belobug PR #324. |
+| `rx9070xt` | [`cd8dfc0`](https://github.com/Belobug/VIctory-Belobug-AMD/commit/cd8dfc06ace7ccb91a19431e74bc2d0de2a10145) | Ancestor of the selected revision, 49 commits behind. |
+| `main` | [`4f62c2a`](https://github.com/Belobug/VIctory-Belobug-AMD/commit/4f62c2a5e27e7beebf3e8d68f77898e43dc7b77c) | Diverged branch with a different graphics and shader-cache implementation. Base for PR #221. |
+
+The reference configuration is the pinned `victory.example.toml`, `scripts/play.ps1` and built-in defaults. The launcher defaults to `diag` with light DRED and `VICTORY_AMBIENT=0.8`. `-RayTracing`, `-Fsr4K` and `-Safe` are opt-in. The five `VICTORY_PORT_*` renderer features listed below default to off. BOB’s offline verification uses the pinned Rust 1.98.1 toolchain, `--locked`, no external title paths and an explicit adapter selection for hardware tests.
+
+The 44.9 ms RX 7900 XTX result below comes from the inherited [AvatarManz benchmark](https://github.com/avatarmanz/VIctory-7900XTX/commit/c9c932c), with the Series S profile, ray tracing off and renderer patches 1, 2, 5, 6 and 7 enabled. It describes that donor configuration. The RX 9060 XT and RTX 3090 entries below are community reports on the revisions listed there.
+
+## Imported patches
+
+Patch intake is pending.
+
+| Purpose | Original author | Source | Exact patch | BOB adaptation | Donor evidence | BOB verification |
+| --- | --- | --- | --- | --- | --- | --- |
+
+## BOB verification
+
+| Adapter | Build | Shader tests | Retail rendering | Playable progression |
+| --- | --- | --- | --- | --- |
+| GeForce RTX 5070 (desktop) | Pending | Pending | Pending separate run | Pending separate run |
+| Radeon RX 9070 XT / RX 7900 XTX | Same Windows build | Pending hardware access | Pending hardware access | Pending hardware access |
+
+## Upstream documentation
+
+<details>
+<summary>Belobug’s original README at the pinned revision</summary>
+
 # VIctory on an RX 7900 XTX
 
 A fork of [VIctory](https://github.com/Marvisak/VIctory), a compatibility layer
@@ -189,3 +226,5 @@ commits taken from elsewhere name the commit and its author.
 
 GPL-3.0-or-later, as VIctory. See [LICENSE](LICENSE); the one file that is not
 covered is named in [docs/asset-policy.md](docs/asset-policy.md).
+
+</details>
