@@ -18,17 +18,21 @@ The 44.9 ms RX 7900 XTX result below comes from the inherited [AvatarManz benchm
 
 ## Imported patches
 
-Patch intake is pending.
-
-| Purpose | Original author | Source | Exact patch | BOB adaptation | Donor evidence | BOB verification |
+| Purpose | Original author | Source repository | Exact patch | BOB adaptation | Donor evidence | BOB verification |
 | --- | --- | --- | --- | --- | --- | --- |
+| Honor the existing descriptor reserve override on capped view heaps | trustno1-coder | [VIctory-NVIDIA](https://github.com/trustno1-coder/VIctory-NVIDIA) | [`a9632bc`](https://github.com/trustno1-coder/VIctory-NVIDIA/commit/a9632bc8de343aa20adf4f1123f16445f5b1b21b) | Donor code as published. [BOB glue](https://github.com/Galygious/BOB-implementation/commit/cf328f3) retains the baseline fallback when the heap cap is unknown. | The donor reports 1,100–4,800 refused tables per frame at the default reserve and 0–33 after requesting `524288` on an RTX 5070. | Diagnostics build passed. 37 descriptor tests passed on the desktop RTX 5070 at defaults and 37 again with the override. 37 passed on the Radeon iGPU at defaults. |
+
+`VICTORY_DYNAMIC_SLOTS` is opt-in on capped heaps. When unset the reserve is 262,144, as at the baseline. On a 1,000,000-slot heap with one null slot, the upper bound is 499,999. A larger reserve leaves fewer title descriptors mirrored in place. The uncapped sizing path uses Belobug’s existing policy.
 
 ## BOB verification
 
-| Adapter | Build | Shader tests | Retail rendering | Playable progression |
+| Adapter | Diagnostics build | Shader tests | Retail rendering | Playable progression |
 | --- | --- | --- | --- | --- |
-| GeForce RTX 5070 (desktop) | Pending | Pending | Pending separate run | Pending separate run |
-| Radeon RX 9070 XT / RX 7900 XTX | Same Windows build | Pending hardware access | Pending hardware access | Pending hardware access |
+| NVIDIA GeForce RTX 5070, desktop, driver 610.88 | Pass | Pinned baseline library suite 303 passed, 4 ignored. Hardware reported 32–32 lanes. | Pending separate run | Pending separate run |
+| AMD Radeon(TM) Graphics, integrated | Same binary | Pinned baseline library suite 303 passed, 4 ignored. Hardware reported 32–64 lanes. | Pending separate run | Pending separate run |
+| Radeon RX 9070 XT / RX 7900 XTX | Same binary | Pending hardware access | Pending hardware access | Pending hardware access |
+
+The adapter names came from `victory translate <empty-directory> --pipelines` using `VICTORY_D3D12_ADAPTER` by name. The empty-directory probe establishes D3D12 device selection. The allocator tests use synthetic descriptors and the shader suite includes hardware readbacks, WARP controls and capability skips.
 
 ## Upstream documentation
 
