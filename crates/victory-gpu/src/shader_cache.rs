@@ -147,6 +147,7 @@ fn build() -> [u8; 32] {
     let [max_wave, ..] = settings;
     if max_wave == 32 {
         hash.update(b"wave32 divergent-loop scalars");
+        hash.update(b"wave32 empty-EXEC branch masks");
     }
     for value in settings {
         hash.update(&value.to_le_bytes());
