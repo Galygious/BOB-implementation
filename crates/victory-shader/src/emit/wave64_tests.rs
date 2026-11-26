@@ -1831,8 +1831,8 @@ fn a_branch_mask_preserves_both_words_on_the_host() {
         return;
     };
     let (wave, _) = host.translation_caps().expect("host wave capabilities");
-    if wave < 32 {
-        eprintln!("this fixture needs at least 32 lanes per host wave; skipped");
+    if wave != 32 {
+        eprintln!("{:?}: this fixture exercises the Wave32-only retry; max wave {wave}, skipped", host.adapter_name());
         return;
     }
     let was = lower::TEST_HOST_WAVE.replace(Some(wave));
