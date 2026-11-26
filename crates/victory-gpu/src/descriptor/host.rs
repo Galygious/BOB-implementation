@@ -1620,6 +1620,9 @@ fn dynamic_slots(count: u32, null: u32) -> u32 {
             .unwrap_or(DYNAMIC << 2)
     });
     if null < PORTABLE_VIEWS {
+        if null == 0 {
+            return DYNAMIC;
+        }
         // LOCAL (NVIDIA, 11/25): a host heap capped at 1,000,000 views ran
         // these out with the fast settings (THIN: 1,100-4,800 of 12,000-16,600
         // tables a frame refused, each a dropped draw). `VICTORY_DYNAMIC_SLOTS`
