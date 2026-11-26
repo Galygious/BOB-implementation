@@ -31,12 +31,22 @@ The 44.9 ms RX 7900 XTX result below comes from the inherited [AvatarManz benchm
 
 | Adapter | Diagnostics build | Shader tests | GPU library tests | Retail rendering | Playable progression |
 | --- | --- | --- | --- | --- | --- |
-| NVIDIA GeForce RTX 5070, desktop, driver 610.88 | Pass | Wave64 suite 33 passed. Baseline library suite 303 passed, 4 ignored. Hardware reported 32–32 lanes. | 445 passed, 34 ignored | Pending separate run | Pending separate run |
-| NVIDIA GeForce RTX 3070, driver 610.88 | Same binary | Wave64 suite 33 passed, including the branch-mask readback. | Targeted shader checks | Pending separate run | Pending separate run |
-| AMD Radeon(TM) Graphics, integrated, driver 32.0.11024.2 | Same binary | Wave64 suite 33 reported passes with capability skips. Baseline library suite 303 passed, 4 ignored. Hardware reported 32–64 lanes. | 445 passed, 34 ignored | Pending separate run | Pending separate run |
+| NVIDIA GeForce RTX 5070, desktop, driver 610.88 | Pass | Full library 316 passed, 4 ignored. Hardware reported 32–32 lanes. | 445 passed, 34 ignored | Pending separate run | Pending separate run |
+| NVIDIA GeForce RTX 3070, driver 610.88 | Same binary | Wave64 suite 33 passed, including the branch-mask readback. | Pending | Pending separate run | Pending separate run |
+| AMD Radeon(TM) Graphics, integrated, driver 32.0.11024.2 | Same binary | Full library 316 passed, 4 ignored with capability skips. Hardware reported 32–64 lanes. | 445 passed, 34 ignored | Pending separate run | Pending separate run |
 | Radeon RX 9070 XT / RX 7900 XTX | Same binary | Pending hardware access | Pending hardware access | Pending hardware access | Pending hardware access |
 
 The adapter names came from `victory translate <empty-directory> --pipelines` using `VICTORY_D3D12_ADAPTER` by name. The empty-directory probe establishes D3D12 device selection. The allocator tests use synthetic descriptors and the shader suite includes hardware readbacks, WARP controls and capability skips.
+
+The pinned baseline shader library reported 303 passes and 4 ignored on both the desktop RTX 5070 and Radeon iGPU. The final suites include those cases and the donor fixtures. Tests with a built-in capability skip can report `ok` in the harness. The per-patch evidence above records which donor hardware fixtures executed. The asset-policy check and Clippy for `victory-gpu` and `victory-shader` with diagnostics passed.
+
+```powershell
+cargo build --locked --profile diag -p victory --features diagnostics
+$env:VICTORY_D3D12_ADAPTER = 'RTX 5070'
+cargo test --locked -p victory-shader --lib -- --test-threads=1 --nocapture
+cargo test --locked -p victory-gpu --lib --features diagnostics -- --test-threads=1 --nocapture
+cargo xtask policy
+```
 
 ## Donor review
 
